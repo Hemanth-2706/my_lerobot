@@ -13,7 +13,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import logging
+from logs.setup_log import get_logger
+logging = get_logger(__name__, 'scripts_train.log', 'scripts_train.py')
+
 import time
 from contextlib import nullcontext
 from pprint import pformat

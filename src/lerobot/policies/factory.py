@@ -14,7 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging
+from logs.setup_log import get_logger
+logging = get_logger(__name__, 'policies_factory.log', 'policies_factory.py')
 
 from torch import nn
 
@@ -34,10 +35,13 @@ from lerobot.policies.sac.reward_model.configuration_classifier import RewardCla
 from lerobot.policies.smolvla.configuration_smolvla import SmolVLAConfig
 from lerobot.policies.tdmpc.configuration_tdmpc import TDMPCConfig
 from lerobot.policies.vqbet.configuration_vqbet import VQBeTConfig
+from dataclasses import asdict
+from pprint import pformat
 
 
 def get_policy_class(name: str) -> PreTrainedPolicy:
     """Get the policy's class and config class given a name (matching the policy class' `name` attribute)."""
+    logging.info(f"Getting policy class for name: {name}")
     if name == "tdmpc":
         from lerobot.policies.tdmpc.modeling_tdmpc import TDMPCPolicy
 
@@ -79,6 +83,7 @@ def get_policy_class(name: str) -> PreTrainedPolicy:
 
 
 def make_policy_config(policy_type: str, **kwargs) -> PreTrainedConfig:
+    logging.info(f"Making policy config for type: {policy_type}")
     if policy_type == "tdmpc":
         return TDMPCConfig(**kwargs)
     elif policy_type == "diffusion":
@@ -126,6 +131,7 @@ def make_policy(
     Returns:
         PreTrainedPolicy: _description_
     """
+    logging.info(f"Making policy with config: {pformat(asdict(cfg))}, dataset metadata: {(ds_meta)}, environment config: {pformat(env_cfg)}")
     if bool(ds_meta) == bool(env_cfg):
         raise ValueError("Either one of a dataset metadata or a sim env must be provided.")
 

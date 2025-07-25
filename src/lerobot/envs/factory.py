@@ -14,7 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import importlib
-
+from logs.setup_log import get_logger
+logging = get_logger(__name__, 'envs_factory.log', 'envs_factory.py')
+from dataclasses import asdict
+from pprint import pformat
 import gymnasium as gym
 
 from lerobot.envs.configs import AlohaEnv, EnvConfig, HILEnvConfig, PushtEnv, XarmEnv
@@ -49,6 +52,7 @@ def make_env(cfg: EnvConfig, n_envs: int = 1, use_async_envs: bool = False) -> g
     Returns:
         gym.vector.VectorEnv: The parallelized gym.env instance.
     """
+    logging.info(f"Creating environment with config: {pformat(asdict(cfg))}, n_envs: {n_envs}, use_async_envs: {use_async_envs}")
     if n_envs < 1:
         raise ValueError("`n_envs must be at least 1")
 

@@ -15,6 +15,8 @@
 # limitations under the License.
 
 from collections import deque
+from logs.setup_log import get_logger
+logging = get_logger(__name__, 'policies_utils.log', 'policies_utils.py')
 
 import torch
 from torch import nn
@@ -45,6 +47,7 @@ def get_device_from_parameters(module: nn.Module) -> torch.device:
 
     Note: assumes that all parameters have the same device
     """
+    logging.info(f"get_device_from_parameters called for module: {module.__class__.__name__}")
     return next(iter(module.parameters())).device
 
 

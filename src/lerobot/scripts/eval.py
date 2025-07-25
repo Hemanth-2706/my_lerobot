@@ -47,7 +47,8 @@ You can learn about the CLI options for this script in the `EvalPipelineConfig` 
 """
 
 import json
-import logging
+from logs.setup_log import get_logger
+logging = get_logger(__name__, 'scripts_eval.log', 'scripts_eval.py')
 import threading
 import time
 from collections.abc import Callable
@@ -486,11 +487,11 @@ def eval_main(cfg: EvalPipelineConfig):
             env,
             policy,
             cfg.eval.n_episodes,
-            max_episodes_rendered=10,
+            max_episodes_rendered=20,
             videos_dir=Path(cfg.output_dir) / "videos",
             start_seed=cfg.seed,
         )
-    print(info["aggregated"])
+    logging.info(info["aggregated"])
 
     # Save info
     with open(Path(cfg.output_dir) / "eval_info.json", "w") as f:

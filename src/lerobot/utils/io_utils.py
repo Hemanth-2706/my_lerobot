@@ -17,6 +17,8 @@ import json
 import warnings
 from pathlib import Path
 from typing import TypeVar
+from logs.setup_log import get_logger
+logging = get_logger(__name__, 'utils_io_utils.log', 'utils_io_utils.py')
 
 import imageio
 
@@ -25,6 +27,7 @@ T = TypeVar("T", bound=JsonLike)
 
 
 def write_video(video_path, stacked_frames, fps):
+    logging.info(f"Writing video to {video_path} with {len(stacked_frames)} frames at {fps} FPS.")
     # Filter out DeprecationWarnings raised from pkg_resources
     with warnings.catch_warnings():
         warnings.filterwarnings(
