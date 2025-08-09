@@ -24,7 +24,8 @@ python src/lerobot/scripts/server/policy_server.py \
 ```
 """
 
-import logging
+from logs.setup_log import get_logger
+logging = get_logger(__name__, 'scripts_server_policy_server.log', 'scripts_server_policy_server.py')
 import pickle  # nosec
 import threading
 import time
@@ -46,7 +47,6 @@ from lerobot.scripts.server.helpers import (
     RemotePolicyConfig,
     TimedAction,
     TimedObservation,
-    get_logger,
     observations_similar,
     raw_observation_to_observation,
 )
@@ -59,7 +59,7 @@ from lerobot.transport.utils import receive_bytes_in_chunks
 
 class PolicyServer(services_pb2_grpc.AsyncInferenceServicer):
     prefix = "policy_server"
-    logger = get_logger(prefix)
+    logger = get_logger(__name__, 'scripts_server_policy_server.log', 'scripts_server_policy_server.py')
 
     def __init__(self, config: PolicyServerConfig):
         self.config = config

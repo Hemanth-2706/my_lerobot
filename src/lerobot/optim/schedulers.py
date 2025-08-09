@@ -20,7 +20,7 @@ from pathlib import Path
 
 import draccus
 from torch.optim import Optimizer
-from torch.optim.lr_scheduler import LambdaLR, LRScheduler
+from torch.optim.lr_scheduler import LambdaLR, _LRScheduler
 
 from lerobot.constants import SCHEDULER_STATE
 from lerobot.datasets.utils import write_json
@@ -36,7 +36,7 @@ class LRSchedulerConfig(draccus.ChoiceRegistry, abc.ABC):
         return self.get_choice_name(self.__class__)
 
     @abc.abstractmethod
-    def build(self, optimizer: Optimizer, num_training_steps: int) -> LRScheduler | None:
+    def build(self, optimizer: Optimizer, num_training_steps: int) -> _LRScheduler | None:
         raise NotImplementedError
 
 
@@ -111,12 +111,12 @@ class CosineDecayWithWarmupSchedulerConfig(LRSchedulerConfig):
         return LambdaLR(optimizer, lr_lambda, -1)
 
 
-def save_scheduler_state(scheduler: LRScheduler, save_dir: Path) -> None:
+def save_scheduler_state(scheduler: _LRScheduler, save_dir: Path) -> None:
     state_dict = scheduler.state_dict()
     write_json(state_dict, save_dir / SCHEDULER_STATE)
 
 
-def load_scheduler_state(scheduler: LRScheduler, save_dir: Path) -> LRScheduler:
+def load_scheduler_state(scheduler: _LRScheduler, save_dir: Path) -> _LRScheduler:
     state_dict = deserialize_json_into_object(save_dir / SCHEDULER_STATE, scheduler.state_dict())
     scheduler.load_state_dict(state_dict)
     return scheduler
